@@ -1,11 +1,11 @@
 #ifndef __KERMIT_H__
 #define __KERMIT_H__
 
-typedef struct
+typedef struct KermitPacket_
 {
 	u32 cmd;			//0x0
 	SceUID sema;		//0x4
-	KermitPacket *self;	//0x8
+	struct KermitPacket_ *self;	//0x8
 	u32 unk_C;			//0xC
 } KermitPacket;
 
@@ -59,6 +59,7 @@ void sceKermitMemory_driver_90B662D0(u8 *data, u32 data_size);
 #define KERMIT_MODE_MSFS		(0x3)
 #define KERMIT_MODE_FLASHFS		(0x4)
 #define KERMIT_MODE_AUDIO		(0x5)
+#define KERMIT_MODE_ME			(0x6)
 #define KERMIT_MODE_LOWIO		(0x7)
 #define KERMIT_MODE_PERIPHERAL	(0x9)
 #define KERMIT_MODE_WLAN		(0xA)
@@ -72,8 +73,13 @@ void sceKermitMemory_driver_90B662D0(u8 *data, u32 data_size);
 #define KERMIT_CMD_AUDIO_ROUTING			(0x3)
 #define KERMIT_CMD_GET_CAMERA_DIRECTION		(0x5)
 #define KERMIT_CMD_GET_IDPSC_ENABLE			(0x6)
+#define KERMIT_CMD_sub_000028B0				(0x7)
+#define KERMIT_CMD_434D0081					(0x8)
+#define KERMIT_CMD_AA2029EC					(0x9)
+#define KERMIT_CMD_910D9C1A					(0xA)
 #define KERMIT_CMD_REQUEST_SUSPEND			(0xB)
 #define KERMIT_CMD_IS_FIRST_BOOT  			(0xC)
+#define KERMIT_CMD_GET_PREFIX_SSID 			(0xD)
 
 /* kermit KERMIT_MODE_MSFS commands */
 #define KERMIT_CMD_INIT_MS   			(0x0)
@@ -96,9 +102,76 @@ void sceKermitMemory_driver_90B662D0(u8 *data, u32 data_size);
 #define KERMIT_CMD_CHDIR_MS   			(0x11)
 #define KERMIT_CMD_DEVCTL   			(0x14)
 
+/* kermit KERMIT_MODE_AUDIO commands */
+#define KERMIT_CMD_INIT_AUDIO_IN		0x0
+#define KERMIT_CMD_OUTPUT_1				0x1
+#define KERMIT_CMD_OUTPUT_2				0x2
+#define KERMIT_CMD_SUSPEND				0x3
+#define KERMIT_CMD_RESUME				0x4
+
+/* kermit KERMIT_MODE_ME commands */
+#define KERMIT_CMD_UNK0						0x0
+#define KERMIT_CMD_SETAVC_TIMESTAMPINTERNAL	0x1
+#define KERMIT_CMD_BOOT_START				0x2
+
+/* kermit KERMIT_MODE_LOWIO commands */
+#define KERMIT_CMD_UNK9		0x9
+#define KERMIT_CMD_UNKA		0xA
+#define KERMIT_CMD_UNKB		0xB
+#define KERMIT_CMD_UNKC		0xC
+
+/* kermit KERMIT_MODE_WLAN commands */
+#define KERMIT_CMD_INIT 						0x0
+#define KERMIT_CMD_GET_SWITCH_INTERNAL_STATE	0x2
+#define KERMIT_CMD_GET_ETHER_ADDR				0x3
+#define KERMIT_CMD_ADHOC_CTL_INIT				0x6
+#define KERMIT_CMD_ADHOC_CTL_TERM				0x7
+#define KERMIT_CMD_ADHOC_SCAN					0x8
+#define KERMIT_CMD_ADHOC_JOIN					0x9
+#define KERMIT_CMD_ADHOC_CREATE					0xA
+#define KERMIT_CMD_ADHOC_LEAVE					0xB
+#define KERMIT_CMD_ADHOC_TX_DATA				0xC
+#define KERMIT_CMD_ADHOC_RX_DATA				0xD
+#define KERMIT_CMD_INET_INIT					0xE
+#define KERMIT_CMD_INET_START					0xF
+#define KERMIT_CMD_INET_TERM					0x10
+#define KERMIT_CMD_INET_SOCKET					0x11
+#define KERMIT_CMD_INET_CLOSE					0x12
+#define KERMIT_CMD_INET_BIND					0x13
+#define KERMIT_CMD_INET_LISTEN					0x14
+#define KERMIT_CMD_INET_CONNECT					0x15
+#define KERMIT_CMD_INET_SHUTDOWN				0x16
+#define KERMIT_CMD_INET_POLL					0x17
+#define KERMIT_CMD_INET_ACCEPT					0x18
+#define KERMIT_CMD_INET_GET_PEER_NAME			0x19
+#define KERMIT_CMD_INET_GET_SOCK_NAME			0x1A
+#define KERMIT_CMD_INET_GET_OPT					0x1B
+#define KERMIT_CMD_INET_SET_OPT					0x1C
+#define KERMIT_CMD_INET_RECV_FROM				0x1D
+#define KERMIT_CMD_INET_SENDTO_INTERNAL			0x1E
+#define KERMIT_CMD_INET_SOIOCTL					0x1F
+#define KERMIT_CMD_SUSPEND						0x20
+#define KERMIT_CMD_SET_WOL_PARAM				0x22
+#define KERMIT_CMD_GET_WOL_INFO					0x23
+#define KERMIT_CMD_SET_HOST_DISCOVER			0x24
+
 /* kermit KERMIT_MODE_UTILITY commands */
-#define KERMIT_CMD_OSK_START   (0x0)
-#define KERMIT_CMD_OSK_SHUTDOWN   (0x1)
-#define KERMIT_CMD_UTIL_UNK3   (0x3)
+#define KERMIT_CMD_OSK_START	(0x0)
+#define KERMIT_CMD_OSK_SHUTDOWN	(0x1)
+#define KERMIT_CMD_OSK_UPDATE	(0x3)
+
+/* kermit KERMIT_MODE_USB commands */
+#define KERMIT_CMD_INIT			0x0
+#define KERMIT_CMD_ACTIVATE		0x15
+#define KERMIT_CMD_DEACTIVATE	0x16
+#define KERMIT_CMD_SET_OP		0x19
+#define KERMIT_CMD_SET_OP_BIS	0x1A
+#define KERMIT_CMD_UNK1B		0x1B
+
+
+/* KERMIT_PACKET address macros */
+#define KERNEL(x)	((x & 0x80000000)? 1:0)
+#define KERMIT_PACKET(x)	(x | (2-KERNEL(x))*0x20000000)
+#define ALIGN_64(x)	((x) & -64)
 
 #endif /* __KERMIT_H__ */
